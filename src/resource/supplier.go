@@ -10,11 +10,13 @@ import (
 
 func SaveSupplier(name string, supplierType *SupplierType)(supplierId int, err error) {
     var supplier = &model.Supplier{}
-
     var engine = lib.Connection()
-    if has,err := engine.Where("name = ?", name).Get(supplier); !has {
-        if err != nil {
-            return 0, err;
+    
+    if !mock {
+        if has,err := engine.Where("name = ?", name).Get(supplier); !has {
+            if err != nil {
+                return 0, err;
+            }
         }
     }
 
@@ -29,6 +31,10 @@ func SaveSupplier(name string, supplierType *SupplierType)(supplierId int, err e
     }
 
     getSupplierAttribute(covers, supplier)
+
+    if mock {
+        return 1,nil
+    }
 
     if supplier.Id > 0 {
         _, err := engine.ID(supplier.Id).AllCols().Update(supplier)

@@ -36,6 +36,7 @@ type execConfig struct {
 
 type Config struct {
     Debug bool
+    Mock bool
     Db db
     Resource resource
     Log logger
@@ -52,6 +53,7 @@ func NewConfig() Config {
         config = Config{}
 
         config.Debug = viper.GetBool("debug")
+        config.Mock = viper.GetBool("mock")
         config.Db = loadDB()
         config.Resource = loadResource()
         config.Log = loadLog()

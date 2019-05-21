@@ -15,6 +15,7 @@ type SupplierType struct {
 }
 
 var debug bool
+var mock bool
 var threads = make(chan [2]string, 100)
 var root string
 var personDir string
@@ -26,6 +27,8 @@ func loadConfig(){
     config := lib.NewConfig()
 
     debug = config.Debug
+    mock = config.Mock
+
     root = config.Resource.Root
     personDir  = config.Resource.Person
     companyDir  = config.Resource.Company
@@ -59,7 +62,10 @@ func CountSupplier(){
     countCompany(companyPath)
 
     // TODO 更新activeSupplier以外的项目为已删除
-    DeleteSupplierExcept(activeSupplier)
+    if !mock {
+        DeleteSupplierExcept(activeSupplier)    
+    }
+    
 
     // 执行转码
     service.StartExec()
@@ -133,7 +139,9 @@ func DiscoverCategory(supplierUrl string, supplierId int) error {
     }
 
     // TODO 更新supplierId下，categoryIds以外的项目为已删除
-    DeleteCategory(supplierId, categoryIds)
+    if !mock {
+        DeleteCategory(supplierId, categoryIds)    
+    }
     return nil
 }
 
@@ -167,7 +175,9 @@ func DiscoverFile(categoryUrl string, categoryId int) error {
     }
 
     // TODO 更新categoryId下，fileIds以外的项目为已删除
-    DeleteFile(categoryId, fileIds)
+    if !mock {
+        DeleteFile(categoryId, fileIds)    
+    }
     return nil
 }
 

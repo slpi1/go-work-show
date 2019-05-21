@@ -13,7 +13,10 @@ import (
 
     "lib"
 )
+
 var debug bool
+var mock bool
+
 var root string
 var upload string
 
@@ -33,6 +36,7 @@ func InitQueue(){
     config := lib.NewConfig()
 
     debug = config.Debug
+    mock = config.Mock
 
     queueLen := config.Exec.Queue
     workerNum = config.Exec.Worker
@@ -50,7 +54,7 @@ func FormatFile(file string){
     }
 
     // 缩略图不存在或文件生成日期小于一天
-    if !Exists(thumb) || isDay(file) {  
+    if !Exists(thumb) || isDay(file) {
         queue <- file
         if debug {
             queueLength++
@@ -75,6 +79,9 @@ func StartExec(){
                 // 获取一个可用的工作进程
                 threads <- "on"
                 fmt.Println("++++ start: ",taskNum," \t queueLength:",  queueLength)
+                if mock {
+                    fmt.Println(file)
+                }
                 go execOneTask(file, taskNum)
 
             case <-to.C:
@@ -82,6 +89,7 @@ func StartExec(){
                 if queueLength == 0 {
                     Finish()
                 }
+                fmt.Println("忽略超时，继续执行。。。")
                 
         }
     }
@@ -99,6 +107,10 @@ func execOneTask(file string, id int){
         // 执行完毕后释放工作进程
         <-threads
     }()
+
+    if mock {
+        return;
+    }
 
     thumb := GetThumbPath(file)
 

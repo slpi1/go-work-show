@@ -9,12 +9,14 @@ import (
 
 func SaveProductFile(name string, categoryId int, categoryUrl string)(fileId int, err error) {
     var file = &model.ProductFile{}
-
     var engine = lib.Connection()
-    if has,err := engine.Where("name = ?", name).And("product_type_id = ?", categoryId).Get(file); !has {
-        if err != nil {
-            return 0, err;
-        }
+
+    if !mock {
+        if has,err := engine.Where("name = ?", name).And("product_type_id = ?", categoryId).Get(file); !has {
+            if err != nil {
+                return 0, err;
+            }
+        }   
     }
 
     file.ProductTypeId = categoryId
@@ -27,6 +29,9 @@ func SaveProductFile(name string, categoryId int, categoryUrl string)(fileId int
 
     dirty := getFileAttribute(covers, file)
 
+    if mock {
+        return 1,nil
+    }
     if file.Id > 0 {
         // 由于文件数量太多，引入脏检查机制降低更新频率
         if dirty {

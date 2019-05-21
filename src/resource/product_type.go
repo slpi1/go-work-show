@@ -11,12 +11,14 @@ import (
 
 func SaveProductType(name string, supplierId int, supplierUrl string)(categoryId int, err error) {
     var category = &model.ProductType{}
-
     var engine = lib.Connection()
-    if has,err := engine.Where("name = ?", name).And("supplier_id = ?", supplierId).Get(category); !has {
-        if err != nil {
-            return 0, err;
-        }
+
+    if !mock {
+        if has,err := engine.Where("name = ?", name).And("supplier_id = ?", supplierId).Get(category); !has {
+            if err != nil {
+                return 0, err;
+            }
+        }   
     }
 
     category.SupplierId = supplierId
@@ -31,6 +33,10 @@ func SaveProductType(name string, supplierId int, supplierUrl string)(categoryId
     }
 
     dirty := getcategoryAttribute(covers, category)
+
+    if mock {
+        return 1,nil
+    }
 
     if category.Id > 0 {
         if dirty {
