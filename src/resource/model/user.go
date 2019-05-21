@@ -1,17 +1,17 @@
 package model
 
 import (
-	"time"
+    "time"
 )
 
 type User struct {
-	Id         int       `xorm:"not null pk autoincr unique INT(11)"`
-	Name       string    `xorm:"not null VARCHAR(45)"`
-	Account    string    `xorm:"not null VARCHAR(45)"`
-	Type       int       `xorm:"not null INT(11)"`
-	Founder    int       `xorm:"not null INT(11)"`
-	Updater    int       `xorm:"not null INT(11)"`
-	CreateTime time.Time `xorm:"not null TIMESTAMP created"`
-	UpdateTime time.Time `xorm:"not null TIMESTAMP updated"`
-	IsDelete   int       `xorm:"not null default 0 INT(11)"`
+    Id         int       `xorm:"not null pk autoincr unique INT(11)"`
+    Name       string    `xorm:"not null VARCHAR(45)"`
+    Account    string    `xorm:"not null VARCHAR(45)"`
+    Type       int       `xorm:"not null INT(11)"`
+    Founder    int       `xorm:"not null INT(11)"`
+    Updater    int       `xorm:"not null INT(11)"`
+    CreateTime time.Time `xorm:"not null TIMESTAMP created"`
+    UpdateTime time.Time `xorm:"not null TIMESTAMP updated"`
+    IsDelete   int       `xorm:"not null default 0 INT(11)"`
 }

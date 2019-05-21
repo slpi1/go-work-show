@@ -8,18 +8,18 @@ import (
 var engine *xorm.Engine
 
 func Connection() *xorm.Engine{
-	if engine != nil {
-		return engine
-	}
+    if engine != nil {
+        return engine
+    }
 
     config := NewConfig()
 
-	var dsn = config.Db.Username + ":"+config.Db.Password+"@"+config.Db.Url+"?charset=utf8"
-	var err error
+    var dsn = config.Db.Username + ":"+config.Db.Password+"@"+config.Db.Url+"?charset=utf8"
+    var err error
     engine, err = xorm.NewEngine("mysql", dsn)
-	engine.SetMaxOpenConns(50)
+    engine.SetMaxOpenConns(50)
     if err != nil {
-    	return nil
+        return nil
     }
     return engine
 }

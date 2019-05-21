@@ -1,0 +1,70 @@
+/*
+    配置文件示例与说明
+    运行时请去除注释，避免执行出错
+ */
+{
+    // 是否开启调试
+    "debug": true,
+
+    // 数据库配置
+    "db":{
+        "username":"root",
+        "password":"root",
+        "url":"tcp(localhost:3306)/work_show"
+    },
+
+    "resource": {
+
+        // 封面文件数量
+        "coverNum": 3,
+
+        // 供应商原始数据目录
+        "root": "D:\\song\\www\\WorkShowFile\\美术中心\\美术中心-外包管理-供应商数据库\\",
+
+        // 供应商数据转码目录
+        "upload": "D:\\song\\www\\WorkShowFile\\美术中心\\Upload\\",
+
+        // 要同步的供应商类别
+        "person":"个人画师",
+        "company":"美术供应商-公司",
+
+        // 支持的文件格式
+        "exts": [
+            ".gif",
+            ".jpg",
+            ".png",
+            ".avi",
+            ".mp4"
+        ],
+
+        // 支持的图片文件格式
+        "img":[
+            ".gif",
+            ".jpg",
+            ".png"
+        ],
+
+        // 支持的视屏文件格式 flv mov等视屏格式请自行测试
+        "video":[
+            ".avi",
+            ".mp4"
+        ]
+    },
+
+    // 日志相关配置
+    "log": {
+        "path":"D:\\song\\www\\WorkShowFile\\DevelopTools\\fileUpdate\\logs\\"
+    },
+
+    // 执行参数配置
+    "exec":{
+        // 执行文件队列长度，超过长度的入队请求要等待
+        "queue": 5000,
+
+        // 转码协程数量
+        "worker": 4,
+
+        // 闲置时长（秒），超过闲置时长内没有入队的文件，程序自动关闭
+        "wait": 20
+    }
+}
