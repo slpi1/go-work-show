@@ -1,10 +1,11 @@
 package resource
 
 import (
+	"fmt"
+
 	"lib"
     "resource/model"
 )
-
 
 func SaveProductFile(name string, categoryId int, categoryUrl string)(fileId int, err error) {
 	var file = &model.ProductFile{}
@@ -18,19 +19,26 @@ func SaveProductFile(name string, categoryId int, categoryUrl string)(fileId int
 
 	file.ProductTypeId = categoryId
 	file.Name = name
-	file.Url = categoryUrl + "\\" + name
+	file.Url = "\\" + categoryUrl + "\\" + name
 	file.IsDelete = 0
 
 	filePath :=  file.Url
 	covers := []string{filePath}
 
-	getFileAttribute(covers, file)
+	dirty := getFileAttribute(covers, file)
 
 	if file.Id > 0 {
-		_, err := engine.ID(file.Id).AllCols().Update(file)
-		if err != nil {
-			lib.Logger().Println("update failed")
-			return 0, err
+		// 由于文件数量太多，引入脏检查机制降低更新频率
+		if dirty {
+			if debug {
+				fmt.Println("file info update:", name)
+			}
+
+			_, err := engine.ID(file.Id).AllCols().Update(file)
+			if err != nil {
+				lib.Logger().Println("update failed")
+				return 0, err
+			}	
 		}
 	} else {
 		_, err := engine.InsertOne(file)
@@ -44,14 +52,21 @@ func SaveProductFile(name string, categoryId int, categoryUrl string)(fileId int
 	return fileId, nil
 }
 
-func getFileAttribute(covers []string, file *model.ProductFile) error {
+func getFileAttribute(covers []string, file *model.ProductFile) bool {
+	var dirty = false
 	//作品类型封面路径
 	_,coverCompressPath1,coverCompressPath2 := GetCoverInfo(covers)
 
-	file.CompressUrl1 = coverCompressPath1[0]
-
-	file.CompressUrl2 = coverCompressPath2[0]
-	return nil
+	if file.CompressUrl1 != coverCompressPath1[0] {
+		file.CompressUrl1 = coverCompressPath1[0]
+		dirty = true	
+	}
+	
+	if file.CompressUrl2 != coverCompressPath2[0]{
+		file.CompressUrl2 = coverCompressPath2[0]
+		dirty = true
+	}
+	return dirty
 }
 
 

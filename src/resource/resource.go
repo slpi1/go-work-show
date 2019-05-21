@@ -46,7 +46,7 @@ func CountSupplier(){
 	countCompany(companyPath)
 
 	// TODO 更新activeSupplier以外的项目为已删除
-	DeleteSupplier(activeSupplier)
+	DeleteSupplierExcept(activeSupplier)
 
     // 执行转码
     service.StartExec()
@@ -102,9 +102,9 @@ func DiscoverCategory(supplierUrl string, supplierId int) error {
 		}
 
 		categoryName :=  category.Name()
-		if debug {
-			fmt.Println("[DiscoverCategory]:", categoryName)
-		}
+		// if debug {
+		// 	fmt.Println("[DiscoverCategory]:", categoryName)
+		// }
 		
 		categoryUrl := supplierUrl + "\\" + categoryName
 
@@ -138,9 +138,9 @@ func DiscoverFile(categoryUrl string, categoryId int) error {
 		}
 
 		fileName :=  file.Name()
-		if debug {
-			fmt.Println("[DiscoverFile]:", fileName)
-		}
+		// if debug {
+		// 	fmt.Println("[DiscoverFile]:", fileName)
+		// }
 
 		// 更新作品文件数据
 		fileId,err := SaveProductFile(fileName,categoryId, categoryUrl)
@@ -212,7 +212,7 @@ func GetCategoryCovers(supplierUrl string, categoryName string)(covers []string,
 				continue
 			}
 
-			var filePath = supplierUrl + "\\" + categoryName + "\\" + file.Name()
+			var filePath = "\\" + supplierUrl + "\\" + categoryName + "\\" + file.Name()
 			coverPath = append(coverPath, filePath)
 		}
 		

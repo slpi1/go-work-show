@@ -23,7 +23,7 @@ func SaveSupplier(name string, supplierType *SupplierType)(supplierId int, err e
 	supplier.Url = "\\" + supplierType.Prefix + "\\" + name
 	supplier.IsDelete = 0
 
-	covers, err := GetSupplierCovers(supplier.Url)
+	covers, err := GetSupplierCovers(supplierType.Prefix + "\\" + name)
 	if err != nil {
 		lib.Logger().Println(supplier.Url, "covers get failed")
 	}
@@ -88,7 +88,7 @@ func getSupplierAttribute(covers []string, supplier *model.Supplier) error {
 	return nil
 }
 
-func DeleteSupplier( activeSupplierIds []int) {
+func DeleteSupplierExcept( activeSupplierIds []int) {
 
 	var engine = lib.Connection()
 

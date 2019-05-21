@@ -51,7 +51,10 @@ func loadConfig() error {
     }
 
     config := lib.NewConfig()
-    fmt.Println(config)
+    if config.Debug {
+        fmt.Println(config)    
+    }
+    
 
     if config.Resource.Root == "" || config.Resource.Upload == "" {
         return errors.New("目录配置错误，请确认 resource.root 与 resource.upload 配置项")

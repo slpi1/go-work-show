@@ -45,7 +45,8 @@ func InitQueue(){
 func FormatFile(file string){
 	thumb := GetThumbPath(file)
 
-	if !Exists(thumb) {	
+	// 缩略图不存在或文件生成日期小于一天
+	if !Exists(thumb) || isDay(file) {	
 		queue <- file
 		if debug {
 			queueLength++
@@ -338,4 +339,28 @@ func CheckFileType(file os.FileInfo) bool {
 func inArray(search string, arr []string) bool {
 	index := sort.SearchStrings(arr, search)
 	return (index < len(arr) && arr[index] == search)
+}
+
+func isDay(fileUrl string) bool {
+	file, _ := os.Stat(fileUrl)
+
+	since := time.Since(file.ModTime())
+	durStr := fmtDuration(since)
+	modTime, err := strconv.Atoi(durStr)
+	if err != nil {
+		lib.Logger().Println("file 字符串转换成整数失败", err.Error())
+		return true
+	}
+
+	if modTime <= 25 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func fmtDuration(d time.Duration) string {
+	d = d.Round(time.Minute)
+	h := d / time.Hour
+	return fmt.Sprintf("%d", h)
 }
