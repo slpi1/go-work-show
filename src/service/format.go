@@ -24,6 +24,9 @@ var queue chan string
 var threads chan string
 var workerNum int
 
+// 老文件转码
+var old bool = false
+
 // 闲置时长
 var wait int
 
@@ -37,6 +40,7 @@ func InitQueue(){
 
     debug = config.Debug
     mock = config.Mock
+    old = config.Exec.Old
 
     queueLen := config.Exec.Queue
     workerNum = config.Exec.Worker
@@ -322,6 +326,19 @@ func IsVideo(file string) bool {
     ext := strings.ToLower(path.Ext(file))
 
     if inArray(ext, videoExts) {
+        return true
+    }
+
+    return false
+}
+
+func IsAudio(file string)bool{
+
+    config := lib.NewConfig()
+    var audioExts = config.Resource.Audio
+    ext := strings.ToLower(path.Ext(file))
+
+    if inArray(ext, audioExts) {
         return true
     }
 

@@ -20,6 +20,7 @@ var threads = make(chan [2]string, 100)
 var root string
 var personDir string
 var companyDir string
+var audioDir string
 var coverNum int
 var activeSupplier []int
 
@@ -32,6 +33,7 @@ func loadConfig(){
     root = config.Resource.Root
     personDir  = config.Resource.Person
     companyDir  = config.Resource.Company
+    audioDir  = config.Resource.AudioPath
     coverNum = config.Resource.CoverNum
 }
 
@@ -61,6 +63,9 @@ func CountSupplier(){
     var companyPath = root + companyDir
     countCompany(companyPath)
 
+    var audioPath = root + audioDir
+    countAudio(audioPath)
+
     // TODO 更新activeSupplier以外的项目为已删除
     if !mock {
         DeleteSupplierExcept(activeSupplier)    
@@ -78,6 +83,11 @@ func countCompany(path string){
 
 func countPerson(path string){
     var supplierType = &SupplierType{2, personDir}
+    DiscoverSupplier(path, supplierType)
+}
+
+func countAudio(path string){
+    var supplierType = &SupplierType{3, audioDir}
     DiscoverSupplier(path, supplierType)
 }
 

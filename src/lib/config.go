@@ -19,9 +19,11 @@ type resource struct {
     Upload string 
     Person string
     Company string
+    AudioPath string
     Exts []string
     Img []string
     Video []string
+    Audio []string
 }
 
 type logger struct {
@@ -29,6 +31,7 @@ type logger struct {
 }
 
 type execConfig struct {
+    Old bool
     Queue int
     Worker int
     Wait int
@@ -79,18 +82,22 @@ func loadResource() resource {
     config.Upload = viper.GetString("resource.upload")
     config.Person = viper.GetString("resource.person")
     config.Company = viper.GetString("resource.company")
+    config.AudioPath = viper.GetString("resource.audioPath")
 
     var exts = viper.GetStringSlice("resource.exts")
     var img = viper.GetStringSlice("resource.img")
     var video = viper.GetStringSlice("resource.video")
+    var audio = viper.GetStringSlice("resource.audio")
 
     sort.Strings(exts)
     sort.Strings(img)
     sort.Strings(video)
+    sort.Strings(audio)
 
     config.Exts = exts
     config.Img = img
     config.Video = video
+    config.Audio = video
     return config
 }
 func loadLog() logger {
@@ -100,6 +107,7 @@ func loadLog() logger {
 }
 func loadExec() execConfig {
     var config = execConfig{}
+    config.Old = viper.GetBool("exec.old")
     config.Queue = viper.GetInt("exec.queue")
     config.Worker = viper.GetInt("exec.worker")
     config.Wait = viper.GetInt("exec.wait")
