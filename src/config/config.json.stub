@@ -81,6 +81,9 @@
         "worker": 4,
 
         // 闲置时长（秒），超过闲置时长内没有入队的文件，程序自动关闭
-        "wait": 20
+        "wait": 20,
+
+        // convert 命令位置
+        "convert": "convert.exe"
     }
 }

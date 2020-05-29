@@ -34,6 +34,9 @@ var wait int
 var queueStatus bool = false
 var queueLength int
 
+// 图片处理命令
+var convert string
+
 
 func InitQueue(){
     config := lib.NewConfig()
@@ -45,6 +48,7 @@ func InitQueue(){
     queueLen := config.Exec.Queue
     workerNum = config.Exec.Worker
     wait = config.Exec.Wait
+    convert = config.Exec.Convert
 
     queue = make(chan string, queueLen)
     threads = make(chan string, workerNum)
@@ -222,7 +226,13 @@ func makeGif(origin string, target string) error {
     video.Parse()
 
     width := 300
-    height := video.Height * width / video.Width 
+    height :=  0
+    if video.Width > 0 {
+        height = video.Height * width / video.Width 
+    }else{
+        height = 200
+    }
+    //height := video.Width > 0 ? video.Height * width / video.Width : 320
     resize := fmt.Sprintf("%dx%d", width, height)
     if video.Duration < 5 {
         cmd := exec.Command("ffmpeg.exe","-i",origin,"-vframes", "100", "-to", "3", "-y", "-f", "gif", "-fs", "100000",  "-s", resize, target)
@@ -257,14 +267,14 @@ func converImg(file string, target string, resize string) error {
 
     if IsGif(file) {
         // convert "{temp}" -coalesce -resize "{resize}" -fuzz 5% +dither -layers Optimize +map "{target}"
-        cmd := exec.Command("convert.exe", file, "-coalesce", "-resize", resize, "-fuzz", "5%", "+dither", "-layers", "Optimize", "+map", target)       
+        cmd := exec.Command(convert, file, "-coalesce", "-resize", resize, "-fuzz", "5%", "+dither", "-layers", "Optimize", "+map", target)       
         if err := cmd.Run(); err != nil {
             lib.Logger().Println(file, "compressFile decode error", err.Error())
             return err
         }
     }else{
 
-        cmd := exec.Command("convert.exe", "-resize", resize, file, target)     
+        cmd := exec.Command(convert, "-resize", resize, file, target)     
         if err := cmd.Run(); err != nil {
             lib.Logger().Println(file, "compressFile decode error", err.Error())
             return err

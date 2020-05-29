@@ -35,6 +35,7 @@ type execConfig struct {
     Queue int
     Worker int
     Wait int
+    Convert string
 }
 
 type Config struct {
@@ -111,5 +112,6 @@ func loadExec() execConfig {
     config.Queue = viper.GetInt("exec.queue")
     config.Worker = viper.GetInt("exec.worker")
     config.Wait = viper.GetInt("exec.wait")
+    config.Convert = viper.GetString("exec.convert")
     return config
 }

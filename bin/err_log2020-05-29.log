@@ -1,0 +1,2 @@
+Error16:16:07 main.go:38: 配置文件读取失败:While parsing config: invalid character '/' looking for beginning of object key string
+Error16:16:07 main.go:18: 初始化失败
