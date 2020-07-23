@@ -203,27 +203,31 @@ func scanDir(path string) []os.FileInfo {
 
 
 // 获取供应商封面文件列表
-func GetSupplierCovers(supplierUrl string) (covers []string, err error) {
+func GetSupplierCovers(supplierUrl string, supplierType int) (covers []string, err error) {
     var realPath = root + supplierUrl
     var coverPath []string
 
-    dirs := scanDir(realPath)
 
-    for _, category := range dirs {
-        if len(coverPath) < coverNum {
+    if supplierType == 3 {
+        coverPath = []string{"\\folder\\folder_0.png","\\folder\\folder_0.png","\\folder\\folder_0.png"}
+    }else{
 
-            if !category.IsDir() {
-                continue
+        dirs := scanDir(realPath)
+        for _, category := range dirs {
+            if len(coverPath) < coverNum {
+
+                if !category.IsDir() {
+                    continue
+                }
+                categoryCovers,err := GetCategoryCovers(supplierUrl, category.Name())
+                if err != nil {
+                    continue
+                }
+                coverPath = append(coverPath, categoryCovers...)
+
             }
-
-            categoryCovers,err := GetCategoryCovers(supplierUrl, category.Name())
-            if err != nil {
-                continue
-            }
-
-            coverPath = append(coverPath, categoryCovers...)
+            
         }
-        
     }
 
     if len(coverPath) > 3 {

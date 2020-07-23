@@ -25,7 +25,7 @@ func SaveSupplier(name string, supplierType *SupplierType)(supplierId int, err e
     supplier.Url = "\\" + supplierType.Prefix + "\\" + name
     supplier.IsDelete = 0
 
-    covers, err := GetSupplierCovers(supplierType.Prefix + "\\" + name)
+    covers, err := GetSupplierCovers(supplierType.Prefix + "\\" + name, supplierType.Type)
     if err != nil {
         lib.Logger().Println(supplier.Url, "covers get failed")
     }
