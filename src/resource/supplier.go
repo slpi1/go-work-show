@@ -68,8 +68,16 @@ func GetCoverInfo(covers []string)(coverPath, coverCompressPath1, coverCompressP
 }
 
 func getSupplierAttribute(covers []string, supplier *model.Supplier) error {
+    var coverPath,coverCompressPath1,coverCompressPath2 []string
     //作品类型封面路径
-    coverPath,coverCompressPath1,coverCompressPath2 := GetCoverInfo(covers)
+    if (supplier.Type == 3){
+        coverPath = covers
+        coverCompressPath1 = covers
+        coverCompressPath2 = covers
+    }else{
+        coverPath,coverCompressPath1,coverCompressPath2 = GetCoverInfo(covers)
+
+    }
 
     jsonData, err := json.Marshal(coverPath)
     if err != nil {
