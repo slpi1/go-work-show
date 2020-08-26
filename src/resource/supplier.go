@@ -2,6 +2,7 @@ package resource
 
 import (
     "encoding/json"
+    "time"
 
     "lib"
     "resource/model"
@@ -17,6 +18,7 @@ func SaveSupplier(name string, supplierType *SupplierType)(supplierId int, err e
             if err != nil {
                 return 0, err;
             }
+            supplier.ApplyTime = time.Now();
         }
     }
 
@@ -24,6 +26,10 @@ func SaveSupplier(name string, supplierType *SupplierType)(supplierId int, err e
     supplier.Type = supplierType.Type
     supplier.Url = "\\" + supplierType.Prefix + "\\" + name
     supplier.IsDelete = 0
+
+    if(supplier.ApplyTime.IsZero()){
+        supplier.ApplyTime = time.Now();
+    }
 
     covers, err := GetSupplierCovers(supplierType.Prefix + "\\" + name, supplierType.Type)
     if err != nil {

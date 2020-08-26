@@ -3,6 +3,7 @@ package resource
 import (
     "encoding/json"
     "fmt"
+    "time"
 
     "lib"
     "resource/model"
@@ -18,6 +19,7 @@ func SaveProductType(name string, supplierId int, supplierUrl string)(categoryId
             if err != nil {
                 return 0, err;
             }
+            category.ApplyTime = time.Now();
         }   
     }
 
@@ -26,6 +28,10 @@ func SaveProductType(name string, supplierId int, supplierUrl string)(categoryId
     category.Url = "\\" + supplierUrl + "\\" + name
     category.ParentId = -1
     category.IsDelete = 0
+
+    if(category.ApplyTime.IsZero()){
+        category.ApplyTime = time.Now();
+    }
 
     covers, err := GetCategoryCovers(supplierUrl, name)
     if err != nil {

@@ -15,5 +15,6 @@ type Supplier struct {
     CoverCompressPath2 string    `xorm:"not null TEXT"`
     CreateTime         time.Time `xorm:"not null TIMESTAMP created"`
     UpdateTime         time.Time `xorm:"not null TIMESTAMP updated"`
+    ApplyTime          time.Time `xorm:"not null TIMESTAMP"`
     IsDelete           int       `xorm:"not null default 0 INT(11)"`
 }
